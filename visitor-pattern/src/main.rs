@@ -1,6 +1,6 @@
 use crate::core::game_objects::AttackObject;
-use crate::core::item::Sword;
 use crate::core::player::Player;
+use crate::core::sword::Sword;
 use std::io;
 
 pub mod core;
