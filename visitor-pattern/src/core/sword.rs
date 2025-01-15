@@ -7,9 +7,9 @@ pub struct Sword<'a> {
 }
 
 impl<'a> Sword<'a> {
-    pub fn new(name: String, player: &'a Player, rarity: u8) -> Sword<'a> {
+    pub fn new(weapon: Weapon<'a>) -> Sword<'a> {
         Sword {
-            weapon: Weapon::new(name, rarity),
+            weapon: weapon,
             durability: 100_u8,
         }
     }

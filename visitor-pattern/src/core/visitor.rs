@@ -1,5 +1,6 @@
-use crate::core::game_objects::AttackObject;
 use std::io;
+
+use super::weapon::AttackObject;
 
 pub trait GameObjectVisitor<S> {
     fn visit(&self, to: &mut S);
