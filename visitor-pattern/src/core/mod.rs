@@ -6,3 +6,4 @@ pub mod txt_saver;
 pub mod visitor;
 pub mod weapon;
 pub mod weapon_factory;
+pub mod spear;
