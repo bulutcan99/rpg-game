@@ -20,7 +20,7 @@ impl<'a> Sword<'a> {
     }
 }
 
-impl<'a> Weapon<'a> for Sword<'a> {
+impl<'a> Weapon for Sword<'a> {
     fn name(&self) -> &str {
         &self.name
     }
@@ -33,20 +33,7 @@ impl<'a> Weapon<'a> for Sword<'a> {
         self.price
     }
 
-    fn equipped_by(&self) -> Option<&'a Player> {
-        self.equipped_by
-    }
-
-    // set_equipped_by fonksiyonu
-    fn set_equipped_by(&mut self, player: Option<&'a Player>) {
-        self.equipped_by = player;
-    }
-
     fn attack(&self) -> String {
-        if self.durability > 0 {
-            format!("Slash! Deals {} damage.", 1000) // Sabit bir değerle saldırı
-        } else {
-            format!("The sword is broken!")
-        }
+        format!("Shoot! Deals damage at range {}.", self.durability)
     }
 }

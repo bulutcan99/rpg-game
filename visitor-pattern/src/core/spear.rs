@@ -21,7 +21,7 @@ impl<'a> Spear<'a> {
     }
 }
 
-impl<'a> Weapon<'a> for Spear<'a> {
+impl<'a> Weapon for Spear<'a> {
     fn name(&self) -> &str {
         &self.name
     }
@@ -34,16 +34,7 @@ impl<'a> Weapon<'a> for Spear<'a> {
         self.price
     }
 
-    fn equipped_by(&self) -> Option<&'a Player> {
-        self.equipped_by
-    }
-
-    fn set_equipped_by(&mut self, player: Option<&'a Player>) {
-        self.equipped_by = player;
-    }
-
     fn attack(&self) -> String {
-        let damage = self.sharpness * 10; // Sharpness değerine göre hasar hesaplanıyor
-        format!("Pierce! Deals {} stabbing damage.", damage)
+        format!("Shoot! Deals damage at range {}.", self.sharpness)
     }
 }
