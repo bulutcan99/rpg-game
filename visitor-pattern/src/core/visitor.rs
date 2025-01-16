@@ -8,7 +8,7 @@ pub trait GameObjectVisitor<S> {
 
 pub trait GameObject<S>
 where
-    S: Weapon,
+    S: for<'a> Weapon<'a>,
 {
     fn accept(&self, visitor: &dyn GameObjectVisitor<S>) -> io::Result<()>;
 }
