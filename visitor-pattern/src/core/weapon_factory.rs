@@ -7,16 +7,16 @@ pub enum WeaponType {
 }
 
 pub trait WeaponFactory: Clone {
-    fn create_weapon(&self, weapon_choice: &str) -> WeaponType;
+    fn create_weapon(&self, weapon_choice: WeaponType) -> WeaponType;
 }
 
 #[derive(Clone)]
 pub struct WeaponCreator;
 
 impl WeaponFactory for WeaponCreator {
-    fn create_weapon(&self, weapon_choice: &str) -> WeaponType {
+    fn create_weapon(&self, weapon_choice: WeaponType) -> impl Weapon {
         match weapon_choice {
-            "Sword" => WeaponType::Sword(Sword::new(
+             Sword(Sword::new(
                 "Excalibur".to_string(),
                 "Legendary".to_string(),
                 1000,
