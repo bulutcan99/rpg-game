@@ -1,5 +1,8 @@
+use std::io::{self, Result};
+
 use super::{player::Player, weapon::Weapon};
 
+#[derive(Debug, Clone)]
 pub struct Sword<'a> {
     name: String,
     rarity: String,
@@ -14,9 +17,24 @@ impl<'a> Sword<'a> {
             name,
             rarity,
             price,
-            durability: 100_u8, // Başlangıçta tam dayanıklılık
+            durability: 100_u8,
             equipped_by: None,
         }
+    }
+    pub fn equip_item(&mut self, player: &'a Player) -> Result<()> {
+        if let Some(_) = self.equipped_by {
+            return Err(io::Error::new(io::ErrorKind::Other, "Already equipped!"));
+        }
+
+        self.equipped_by = Some(player);
+        Ok(())
+    }
+    pub fn equipped_by(&self) -> Option<&'a Player> {
+        if let Some(player) = self.equipped_by {
+            return Some(player);
+        }
+
+        None
     }
 }
 

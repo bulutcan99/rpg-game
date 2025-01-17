@@ -20,7 +20,7 @@ fn main() -> io::Result<()> {
     // Silahların bilgilerini yazdırmak
     println!(
         "Weapon: {}, Rarity: {}, Price: {} Gold, Attack: {}",
-        sword.name(),
+        sword.clone().name(),
         sword.rarity(),
         sword.price(),
         sword.attack()
@@ -39,5 +39,7 @@ fn main() -> io::Result<()> {
         spear.price(),
         spear.attack()
     );
+
+    sword.
     Ok(())
 }

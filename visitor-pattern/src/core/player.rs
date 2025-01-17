@@ -1,5 +1,6 @@
 use std::io;
 
+#[derive(Debug, Clone)]
 pub struct Player {
     name: String,
     health: u8,
