@@ -1,17 +1,20 @@
-use std::io::{self, Result};
+use std::{
+    io::{self, Result},
+    sync::Arc,
+};
 
 use super::{player::Player, weapon::Weapon};
 
 #[derive(Debug, Clone)]
-pub struct Sword<'a> {
+pub struct Sword {
     name: String,
     rarity: String,
     price: u32,
     durability: u8,
-    equipped_by: Option<&'a Player>,
+    equipped_by: Option<Arc<Player>>,
 }
 
-impl<'a> Sword<'a> {
+impl Sword {
     pub fn new(name: String, rarity: String, price: u32) -> Self {
         Self {
             name,
@@ -21,24 +24,24 @@ impl<'a> Sword<'a> {
             equipped_by: None,
         }
     }
-    pub fn equip_item(&mut self, player: &'a Player) -> Result<()> {
-        if let Some(_) = self.equipped_by {
+
+    
+    pub fn equip_item(&mut self, player: Arc<Player>) -> Result<()> {
+        if self.equipped_by.is_some() {
             return Err(io::Error::new(io::ErrorKind::Other, "Already equipped!"));
         }
 
         self.equipped_by = Some(player);
         Ok(())
     }
-    pub fn equipped_by(&self) -> Option<&'a Player> {
-        if let Some(player) = self.equipped_by {
-            return Some(player);
-        }
 
-        None
+    
+    pub fn equipped_by(&self) -> Option<Arc<Player>> {
+        self.equipped_by.clone()
     }
 }
 
-impl<'a> Weapon for Sword<'a> {
+impl Weapon for Sword {
     fn name(&self) -> &str {
         &self.name
     }
@@ -52,6 +55,6 @@ impl<'a> Weapon for Sword<'a> {
     }
 
     fn attack(&self) -> String {
-        format!("Shoot! Deals damage at range {}.", self.durability)
+        format!("Swing the sword! Deals {} damage.", self.durability)
     }
 }

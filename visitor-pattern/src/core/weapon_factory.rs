@@ -1,41 +1,33 @@
-use super::{bow::Bow, spear::Spear, sword::Sword, weapon::Weapon};
+use super::{bow::Bow, sword::Sword, weapon::Weapon};
 
-pub trait WeaponFactory {
-    fn create_weapon(&self) -> Box<dyn Weapon>;
+#[derive(Clone)]
+pub enum WeaponType {
+    Sword(Sword),
+    Bow(Bow),
 }
 
-pub struct SwordFactory;
-
-impl WeaponFactory for SwordFactory {
-    fn create_weapon(&self) -> Box<dyn Weapon> {
-        Box::new(Sword::new(
-            "EXCA".to_string(),
-            "LEGENDARY".to_string(),
-            1000,
-        ))
-    }
+pub trait WeaponFactory: Clone {
+    fn create_weapon(&self, weapon_choice: &str) -> WeaponType;
 }
 
-pub struct BowFactory;
-impl WeaponFactory for BowFactory {
-    fn create_weapon(&self) -> Box<dyn Weapon> {
-        Box::new(Bow::new(
-            "LIGHT".to_string(),
-            "LEGENDARY".to_string(),
-            1000,
-            100,
-        ))
-    }
-}
+#[derive(Clone)]
+pub struct WeaponCreator;
 
-pub struct SpearFactory;
-impl WeaponFactory for SpearFactory {
-    fn create_weapon(&self) -> Box<dyn Weapon> {
-        Box::new(Spear::new(
-            "PIER".to_string(),
-            "LEGENDARY".to_string(),
-            1000,
-            4,
-        ))
+impl WeaponFactory for WeaponCreator {
+    fn create_weapon(&self, weapon_choice: &str) -> WeaponType {
+        match weapon_choice {
+            "Sword" => WeaponType::Sword(Sword::new(
+                "Excalibur".to_string(),
+                "Legendary".to_string(),
+                1000,
+            )),
+            "Bow" => WeaponType::Bow(Bow::new(
+                "Eagle Bow".to_string(),
+                "Rare".to_string(),
+                800,
+                50, // Bow range
+            )),
+            _ => panic!("Invalid weapon choice! Please choose 'Sword' or 'Bow'."),
+        }
     }
 }

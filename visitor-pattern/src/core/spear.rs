@@ -1,18 +1,19 @@
 use std::io::{self, Result};
+use std::sync::Arc;
 
 use super::weapon::Weapon;
 use crate::core::player::Player;
 
 #[derive(Debug, Clone)]
-pub struct Spear<'a> {
+pub struct Spear {
     name: String,
     rarity: String,
     price: u32,
     sharpness: u8,
-    equipped_by: Option<&'a Player>,
+    equipped_by: Option<Arc<Player>>,
 }
 
-impl<'a> Spear<'a> {
+impl Spear {
     pub fn new(name: String, rarity: String, price: u32, sharpness: u8) -> Self {
         Self {
             name,
@@ -23,24 +24,21 @@ impl<'a> Spear<'a> {
         }
     }
 
-    pub fn equip_item(&mut self, player: &'a Player) -> Result<()> {
-        if let Some(_) = self.equipped_by {
+    pub fn equip_item(&mut self, player: Arc<Player>) -> Result<()> {
+        if self.equipped_by.is_some() {
             return Err(io::Error::new(io::ErrorKind::Other, "Already equipped!"));
         }
 
         self.equipped_by = Some(player);
         Ok(())
     }
-    pub fn equipped_by(&self) -> Option<&'a Player> {
-        if let Some(player) = self.equipped_by {
-            return Some(player);
-        }
 
-        None
+    pub fn equipped_by(&self) -> Option<Arc<Player>> {
+        self.equipped_by.clone() 
     }
 }
 
-impl<'a> Weapon for Spear<'a> {
+impl Weapon for Spear {
     fn name(&self) -> &str {
         &self.name
     }
@@ -54,6 +52,6 @@ impl<'a> Weapon for Spear<'a> {
     }
 
     fn attack(&self) -> String {
-        format!("Shoot! Deals damage at range {}.", self.sharpness)
+        format!("Thrust! Deals {} damage with sharpness.", self.sharpness)
     }
 }
