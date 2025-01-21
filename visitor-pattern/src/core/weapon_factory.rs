@@ -1,33 +1,21 @@
 use super::{bow::Bow, sword::Sword, weapon::Weapon};
 
-#[derive(Clone)]
-pub enum WeaponType {
-    Sword(Sword),
-    Bow(Bow),
+pub trait WeaponFactory {
+    fn create_weapon(&self) -> Box<dyn Weapon>;
 }
 
-pub trait WeaponFactory: Clone {
-    fn create_weapon(&self, weapon_choice: WeaponType) -> WeaponType;
+pub struct MeleeWeaponFactory;
+
+impl WeaponFactory for MeleeWeaponFactory {
+    fn create_weapon(&self) -> Box<dyn Weapon> {
+        Box::new(Sword::new("D".to_string(), "Legendary".to_string(), 100))
+    }
 }
 
-#[derive(Clone)]
-pub struct WeaponCreator;
+pub struct RangedWeaponFactory;
 
-impl WeaponFactory for WeaponCreator {
-    fn create_weapon(&self, weapon_choice: WeaponType) -> impl Weapon {
-        match weapon_choice {
-             Sword(Sword::new(
-                "Excalibur".to_string(),
-                "Legendary".to_string(),
-                1000,
-            )),
-            "Bow" => WeaponType::Bow(Bow::new(
-                "Eagle Bow".to_string(),
-                "Rare".to_string(),
-                800,
-                50, // Bow range
-            )),
-            _ => panic!("Invalid weapon choice! Please choose 'Sword' or 'Bow'."),
-        }
+impl WeaponFactory for RangedWeaponFactory {
+    fn create_weapon(&self) -> Box<dyn Weapon> {
+        Box::new(Bow::new("B".to_string(), "Legendary".to_string(), 100, 100))
     }
 }
