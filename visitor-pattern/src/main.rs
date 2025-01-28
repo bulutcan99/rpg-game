@@ -1,4 +1,4 @@
-use crate::core::player::Player;
+use crate::core::warrior::Player;
 use crate::core::sword::Sword;
 use core::weapon_factory::{MeleeWeaponFactory, RangedWeaponFactory, WeaponFactory};
 use std::io;
