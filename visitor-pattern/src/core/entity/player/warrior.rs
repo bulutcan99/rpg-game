@@ -1,9 +1,8 @@
 use std::io::{self, Result};
 
-use super::{
-    player::Player,
-    weapon::{self, Weapon},
-};
+use crate::core::entity::weapon::weapon::Weapon;
+
+use super::player::{DamageValidation, Player};
 
 #[derive(Debug, Clone)]
 pub struct Warrior<W>
@@ -44,11 +43,15 @@ where
         self.health
     }
 
+    fn set_health(&mut self, new_health: f32) {
+        self.health = new_health;
+    }
+
     fn get_weapon(&self) -> Option<W> {
         self.weapon.clone()
     }
 
-    fn set_weapon(&self, weapon: W) -> Result<()> {
+    fn set_weapon(&mut self, weapon: W) -> Result<()> {
         if self.weapon.is_some() {
             return Err(io::Error::new(io::ErrorKind::Other, "Weapon already equipped").into());
         }
@@ -60,21 +63,21 @@ where
         self.position
     }
 
-    fn set_position(&self, position: (f32, f32)) -> Result<()> {
+    fn set_position(&mut self, position: (f32, f32)) -> Result<()> {
         self.position = position;
         Ok(())
     }
 
-    fn get_strength(&self) -> u8 {
+    fn get_main_stat(&self) -> u8 {
         self.strength
     }
 
-    fn set_strength(&self, str: u8) -> Result<()> {
+    fn set_main_stat(&mut self, str: u8) -> Result<()> {
         self.strength = str;
         Ok(())
     }
 
-    fn take_damage(&self, damage: f32) {
+    fn take_damage(&mut self, damage: f32) {
         if self.health < damage {
             println!("{} is dead!", self.name);
         } else {
@@ -87,12 +90,10 @@ where
     }
 
     //todo: hasar hesaplamasi algoritmasi
-    fn strike(&self) -> Result<f32> {
+    fn strike(&self, target: Box<dyn Player<W>>) -> DamageValidation {
         if let Some(ref weapon) = self.weapon {
-            println!("{} strikes with {}!", self.name, weapon.name());
-            Ok(self.strength as f32)
         } else {
-            Err(io::Error::new(io::ErrorKind::Other, "No weapon equipped").into())
+            DamageValidation::NoDamage
         }
     }
 }
