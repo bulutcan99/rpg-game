@@ -1,11 +1,2 @@
-pub mod bow;
-pub mod console_printer;
-pub mod error;
-pub mod player;
-pub mod spear;
-pub mod sword;
-pub mod txt_saver;
-pub mod visitor;
-pub mod warrior;
-pub mod weapon;
-pub mod weapon_factory;
+pub mod entity;
+pub mod services;
