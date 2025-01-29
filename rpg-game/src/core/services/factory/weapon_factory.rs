@@ -50,7 +50,7 @@ impl WeaponFactory for RangedWeaponFactory {
         Box::new(Bow::new(
             format!("Bow {}", rand::thread_rng().gen_range(1..100)),
             random_rarity(),
-            random_int_within_range(100, 500),     // Price
+            random_int_within_range(100, 255),     // Price
             random_int_within_range(5, 10),        // Weight
             random_stat_within_range(20.0, 100.0), // Attack Damage
             random_stat_within_range(1.0, 2.5),    // Attack Speed
@@ -67,7 +67,7 @@ impl WeaponFactory for SpearWeaponFactory {
         Box::new(Spear::new(
             format!("Spear {}", rand::thread_rng().gen_range(1..100)),
             random_rarity(),
-            random_int_within_range(100, 400),    // Price
+            random_int_within_range(100, 255),    // Price
             random_int_within_range(6, 12),       // Sharpness
             random_stat_within_range(15.0, 75.0), // Attack Damage
             random_stat_within_range(1.2, 2.2),   // Attack Speed

@@ -4,7 +4,7 @@ use super::weapon::{Rarity, Weapon};
 pub struct Spear {
     name: String,
     rarity: Rarity,
-    price: u32,
+    price: u8,
     weight: u8,
     attack_damage: f32,
     attack_speed: f32,
@@ -17,7 +17,7 @@ impl Spear {
     pub fn new(
         name: String,
         rarity: Rarity,
-        price: u32,
+        price: u8,
         weight: u8,
         attack_damage: f32,
         attack_speed: f32,
@@ -47,7 +47,7 @@ impl Weapon for Spear {
         self.rarity.clone()
     }
 
-    fn get_price(&self) -> u32 {
+    fn get_price(&self) -> u8 {
         self.price
     }
 

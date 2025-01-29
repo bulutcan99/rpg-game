@@ -6,7 +6,7 @@ pub trait Weapon: Send + Sync {
     /// Already setted at creation.
     fn get_name(&self) -> &str;
     fn get_rarity(&self) -> Rarity;
-    fn get_price(&self) -> u32;
+    fn get_price(&self) -> u8;
     fn get_weight(&self) -> u8;
     fn get_attack_speed(&self) -> f32;
     fn get_attack_damage(&self) -> f32;

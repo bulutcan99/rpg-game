@@ -4,7 +4,7 @@ use super::weapon::{Rarity, Weapon};
 pub struct Bow {
     name: String,
     rarity: Rarity,
-    price: u32,
+    price: u8,
     weight: u8,
     attack_damage: f32,
     attack_speed: f32,
@@ -16,7 +16,7 @@ impl Bow {
     pub fn new(
         name: String,
         rarity: Rarity,
-        price: u32,
+        price: u8,
         weight: u8,
         attack_damage: f32,
         attack_speed: f32,
@@ -44,7 +44,7 @@ impl Weapon for Bow {
         self.rarity.clone()
     }
 
-    fn get_price(&self) -> u32 {
+    fn get_price(&self) -> u8 {
         self.price
     }
 
