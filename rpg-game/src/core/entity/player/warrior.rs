@@ -1,40 +1,29 @@
+use super::player::{DamageValidation, Player};
+use crate::core::entity::weapon::weapon::Weapon;
 use std::io::{self, Result};
 
-use crate::core::entity::weapon::weapon::Weapon;
-
-use super::player::{DamageValidation, Player};
-
 #[derive(Debug, Clone)]
-pub struct Warrior<W>
-where
-    W: Weapon,
-{
+pub struct Warrior {
     name: String,
     health: f32,
     strength: u8,
-    weapon: Option<W>,
+    weapon: Option<Box<dyn Weapon>>,
     position: (f32, f32),
 }
 
-impl<W> Warrior<W>
-where
-    W: Weapon,
-{
-    pub fn new(name: String, strength: u8, position: (f32, f32), weapon: W) -> Warrior<W> {
+impl Warrior {
+    pub fn new(name: String, strength: u8, position: (f32, f32)) -> Warrior {
         Warrior {
             name,
             health: 100_f32,
             strength,
-            weapon: Some(weapon),
+            weapon: None,
             position,
         }
     }
 }
 
-impl<W> Player<W> for Warrior<W>
-where
-    W: Weapon,
-{
+impl Player for Warrior {
     fn get_name(&self) -> &str {
         &self.name
     }
@@ -47,11 +36,11 @@ where
         self.health = new_health;
     }
 
-    fn get_weapon(&self) -> Option<W> {
+    fn get_weapon(&self) -> Option<Box<dyn Weapon>> {
         self.weapon.clone()
     }
 
-    fn set_weapon(&mut self, weapon: W) -> Result<()> {
+    fn set_weapon(&mut self, weapon: Box<dyn Weapon>) -> Result<()> {
         if self.weapon.is_some() {
             return Err(io::Error::new(io::ErrorKind::Other, "Weapon already equipped").into());
         }
@@ -72,14 +61,15 @@ where
         self.strength
     }
 
-    fn set_main_stat(&mut self, str: u8) -> Result<()> {
-        self.strength = str;
+    fn set_main_stat(&mut self, stat: u8) -> Result<()> {
+        self.strength = stat;
         Ok(())
     }
 
     fn take_damage(&mut self, damage: f32) {
         if self.health < damage {
             println!("{} is dead!", self.name);
+            self.health = 0.0;
         } else {
             self.health -= damage;
             println!(
@@ -89,19 +79,34 @@ where
         }
     }
 
-    // Stat * weapon dam
-    // silahin range'ini de kontrol etmeliyiz karsidaki kullanici
-    // bu range icinde mi
-    // vectorel hesaplama olcak
-    fn strike(&self, target: Box<dyn Player<W>>) -> DamageValidation {
+    fn strike(&self, target: Box<dyn Player>) -> DamageValidation {
         if let Some(ref weapon) = self.weapon {
-            let attack_damage = self.strength * weapon.get_attack_damage();
-            if target.get_health() < attack_damage {
-                DamageValidation::Died
+            let attack_damage = self.strength as f32 * weapon.get_attack_damage();
+
+            let distance = ((self.position.0 - target.get_position().0).powi(2)
+                + (self.position.1 - target.get_position().1).powi(2))
+            .sqrt();
+
+            if distance > weapon.get_range() as f32 {
+                println!("Target is out of range!");
+                return DamageValidation::NoDamage;
             }
+
+            if target.get_health() < attack_damage {
+                println!("{} killed {}", self.get_name(), target.get_name());
+                return DamageValidation::Died;
+            }
+
+            println!(
+                "{} dealt {} damage to {}",
+                self.get_name(),
+                attack_damage,
+                target.get_name()
+            );
             return DamageValidation::Damage(attack_damage);
         } else {
-            DamageValidation::NoDamage
+            println!("{} has no weapon!", self.get_name());
+            return DamageValidation::NoDamage;
         }
     }
 }

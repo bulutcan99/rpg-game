@@ -1,6 +1,6 @@
 use std::io;
 
-use super::weapon::{self, Weapon};
+use crate::core::entity::weapon::weapon::Weapon;
 
 pub trait GameObjectVisitor<S> {
     fn visit(&self, to: &mut S);

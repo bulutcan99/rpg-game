@@ -74,4 +74,8 @@ impl Weapon for Spear {
     fn get_range(&self) -> u8 {
         self.range
     }
+
+    fn clone_box(&self) -> Box<dyn Weapon> {
+        Box::new(self.clone())
+    }
 }
