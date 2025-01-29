@@ -25,7 +25,7 @@ pub trait WeaponFactory {
     fn create_weapon(&self) -> Box<dyn Weapon>;
 }
 
-// Melee Weapon Factory (Creates Swords)
+/// Melee Weapon Factory (Creates Swords)
 pub struct MeleeWeaponFactory;
 
 impl WeaponFactory for MeleeWeaponFactory {
@@ -42,7 +42,7 @@ impl WeaponFactory for MeleeWeaponFactory {
     }
 }
 
-// Ranged Weapon Factory (Creates Bows)
+/// Ranged Weapon Factory (Creates Bows)
 pub struct RangedWeaponFactory;
 
 impl WeaponFactory for RangedWeaponFactory {
@@ -59,7 +59,7 @@ impl WeaponFactory for RangedWeaponFactory {
     }
 }
 
-// Spear Weapon Factory (Creates Spears)
+/// Spear Weapon Factory (Creates Spears)
 pub struct SpearWeaponFactory;
 
 impl WeaponFactory for SpearWeaponFactory {
@@ -77,7 +77,7 @@ impl WeaponFactory for SpearWeaponFactory {
     }
 }
 
-// **RandomWeaponFactory** (Can create any weapon type randomly or a specific type)
+/// **RandomWeaponFactory** (Can create any weapon type randomly or a specific type)
 pub struct RandomWeaponFactory;
 
 impl RandomWeaponFactory {

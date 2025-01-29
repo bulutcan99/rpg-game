@@ -79,6 +79,7 @@ impl Player for Warrior {
         }
     }
 
+    // target ile aradaki position hesaplamasi yapilcak
     fn strike(&self, target: Box<dyn Player>) -> DamageValidation {
         if let Some(ref weapon) = self.weapon {
             let attack_damage = self.strength as f32 * weapon.get_attack_damage();
