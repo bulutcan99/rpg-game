@@ -1,3 +1,4 @@
-// genel hatalar
 // player icin hatalar
-// silahlar icin hatalar
+
+
+// saldiri hatalari (olene saldiramazsin)
