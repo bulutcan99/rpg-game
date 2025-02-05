@@ -1,6 +1,6 @@
 use core::{
     entity::{
-        player::{self, player::Player, warrior::Warrior},
+        player::{self, player::Class, warrior::Warrior},
         weapon::weapon::Weapon,
     },
     services::factory::weapon_factory::RandomWeaponFactory,

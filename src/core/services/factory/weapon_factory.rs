@@ -11,7 +11,7 @@ fn random_stat_within_range(min: f32, max: f32) -> f32 {
     rand::thread_rng().gen_range(min..max)
 }
 
-fn random_int_within_range(min: u8, max: u8) -> u8 {
+fn random_stat_int_within_range(min: u8, max: u8) -> u8 {
     rand::thread_rng().gen_range(min..=max)
 }
 
@@ -33,11 +33,11 @@ impl WeaponFactory for MeleeWeaponFactory {
         Box::new(Sword::new(
             format!("Sword {}", rand::thread_rng().gen_range(1..100)),
             random_rarity(),
-            random_int_within_range(50, 200),     // Price
-            random_int_within_range(5, 15),       // Weight
-            random_stat_within_range(10.0, 50.0), // Attack Damage
-            random_stat_within_range(1.0, 2.0),   // Attack Speed
-            1,                                    // Sword range is always 1
+            random_stat_int_within_range(50, 200), // Price
+            random_stat_int_within_range(5, 15),   // Weight
+            random_stat_within_range(10.0, 50.0),  // Attack Damage
+            random_stat_within_range(1.0, 2.0),    // Attack Speed
+            1,                                     // Sword range is always 1
         ))
     }
 }
@@ -50,11 +50,11 @@ impl WeaponFactory for RangedWeaponFactory {
         Box::new(Bow::new(
             format!("Bow {}", rand::thread_rng().gen_range(1..100)),
             random_rarity(),
-            random_int_within_range(100, 255),     // Price
-            random_int_within_range(5, 10),        // Weight
-            random_stat_within_range(20.0, 100.0), // Attack Damage
-            random_stat_within_range(1.0, 2.5),    // Attack Speed
-            random_int_within_range(20, 100),      // Range (Bow has largest range)
+            random_stat_int_within_range(100, 255), // Price
+            random_stat_int_within_range(5, 10),    // Weight
+            random_stat_within_range(20.0, 100.0),  // Attack Damage
+            random_stat_within_range(1.0, 2.5),     // Attack Speed
+            random_stat_int_within_range(20, 100),  // Range (Bow has largest range)
         ))
     }
 }
@@ -67,12 +67,12 @@ impl WeaponFactory for SpearWeaponFactory {
         Box::new(Spear::new(
             format!("Spear {}", rand::thread_rng().gen_range(1..100)),
             random_rarity(),
-            random_int_within_range(100, 255),    // Price
-            random_int_within_range(6, 12),       // Sharpness
-            random_stat_within_range(15.0, 75.0), // Attack Damage
-            random_stat_within_range(1.2, 2.2),   // Attack Speed
-            random_int_within_range(10, 50),      // Range (Spear range is between Sword and Bow)
-            random_int_within_range(10, 30),      // Sharpness multiplier
+            random_stat_int_within_range(100, 255), // Price
+            random_stat_int_within_range(6, 12),    // Sharpness
+            random_stat_within_range(15.0, 75.0),   // Attack Damage
+            random_stat_within_range(1.2, 2.2),     // Attack Speed
+            random_stat_int_within_range(10, 50),   // Range (Spear range is between Sword and Bow)
+            random_stat_int_within_range(10, 30),   // Sharpness multiplier
         ))
     }
 }
