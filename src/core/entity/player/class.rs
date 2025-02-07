@@ -1,9 +1,8 @@
-use std::io::Result;
-
 use crate::core::entity::weapon::weapon::Weapon;
 
 use super::{
     damage::DamageOutput,
+    error::Result,
     stat::{Stat, WhichStat},
 };
 

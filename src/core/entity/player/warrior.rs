@@ -183,7 +183,7 @@ where
 
             if target.get_health() < attack_damage {
                 println!("{} killed {}", self.get_name(), target.get_name());
-                return DamageOutput::Died;
+                return DamageOutput::Kill;
             }
 
             println!(
