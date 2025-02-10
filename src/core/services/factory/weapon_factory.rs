@@ -20,7 +20,7 @@ fn random_rarity() -> Rarity {
     Rarity::from(random_value)
 }
 
-// Factory trait for weapon creation
+/// Factory trait for weapon creation
 pub trait WeaponFactory {
     fn create_weapon(&self) -> Box<dyn Weapon>;
 }
