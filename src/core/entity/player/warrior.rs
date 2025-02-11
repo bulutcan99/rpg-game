@@ -41,7 +41,10 @@ impl Warrior<Alive> {
 	}
 }
 
-impl<S> Class for Warrior<S> {
+impl<S> Class for Warrior<S>
+where
+	S: Send + Sync,
+{
 	const MAIN_STAT: WhichAttribute = Str;
 
 	fn get_name(&self) -> &str {

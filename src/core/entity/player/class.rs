@@ -3,16 +3,12 @@ use crate::core::entity::weapon::weapon::Weapon;
 
 use super::{damage::DamageOutput, error::Result};
 
-pub trait Status {}
 
-// Implement Status for Alive and Dead
+/// Implement Status for Alive and Dead
 pub struct Alive;
 pub struct Dead;
 
-impl Status for Alive {}
-impl Status for Dead {}
-
-pub trait Class {
+pub trait Class: Send+Sync {
 	const MAIN_STAT: WhichAttribute;
 	fn get_name(&self) -> &str;
 	fn is_alive(&self) -> bool;
@@ -41,7 +37,7 @@ pub trait Class {
 	fn set_stat(&mut self, amount: u8, stat: WhichAttribute) -> Result<()>;
 }
 
-pub trait AliveClass: Class + Send + Sync {
+pub trait AliveClass: Class  {
 	type DeadType: DeadClass;
 
 	fn take_damage(&mut self, damage: f32);
@@ -51,7 +47,7 @@ pub trait AliveClass: Class + Send + Sync {
 	fn die(self) -> Self::DeadType;
 }
 
-pub trait DeadClass: Sized {
+pub trait DeadClass: Class  {
 	type AliveType: AliveClass;
 
 	fn resurrect(self) -> Self::AliveType;

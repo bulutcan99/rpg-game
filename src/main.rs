@@ -27,7 +27,8 @@ async fn main() -> error::Result<()> {
 	warrior.take_damage(80.0); // Should kill the warrior
 
 	let dead_warrior = warrior.die();
-
+	let dead_warrior_hp = dead_warrior.get_health();
+	println!("NOW HP {:?}", dead_warrior_hp);
 	// Trying to resurrect
 	let resurrected_warrior = dead_warrior.resurrect();
 	println!("{} has been resurrected with health: {}", resurrected_warrior.get_name(), resurrected_warrior.get_health());
