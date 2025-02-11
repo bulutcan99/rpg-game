@@ -132,7 +132,7 @@ where
 		self.position
 	}
 
-	fn get_weapon(&self) -> Option<Box<dyn Weapon>>{
+	fn get_weapon(&self) -> Option<Box<dyn Weapon>> {
 		self.weapon.clone()
 	}
 
@@ -262,5 +262,41 @@ impl DeadClass for Warrior<Dead> {
 			position: self.position,
 			gold: self.gold,
 		}
+	}
+}
+
+mod test {
+	use crate::core::entity::player::class::DeadClass;
+
+	#[tokio::test]
+	async fn dead_or_alive() {
+		use crate::core::entity::player::class::{AliveClass, Class};
+		use crate::core::entity::player::stat::Attribute;
+		use crate::core::entity::player::warrior::Warrior;
+
+		let stat = Attribute {
+			strength: 10,
+			dexterity: 5,
+			intelligence: 3,
+		};
+
+		let mut warrior = Warrior::new("Arthas".to_string(), stat, (0.0, 0.0));
+
+		assert_eq!(warrior.get_name(), "Arthas");
+		assert_eq!(warrior.get_health(), 100.0);
+
+		assert!(warrior.is_alive());
+
+		warrior.take_damage(30.0);
+		assert_eq!(warrior.get_health(), 70.0);
+
+		warrior.take_damage(80.0);
+		let dead_warrior = warrior.die();
+		assert_eq!(dead_warrior.get_health(), 0.0);
+		assert!(!dead_warrior.is_alive());
+
+		let resurrected_warrior = dead_warrior.resurrect();
+		assert!(resurrected_warrior.is_alive());
+		assert_eq!(resurrected_warrior.get_health(), 100.0);
 	}
 }

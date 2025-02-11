@@ -1,4 +1,5 @@
 use core::fmt;
+use std::any::Any;
 use std::fmt::Debug;
 
 /// Attack Speed 1.0 means default 1 attack per second
@@ -11,15 +12,17 @@ pub trait Weapon: Send + Sync {
     fn get_attack_speed(&self) -> f32;
     fn get_attack_damage(&self) -> f32;
     fn get_range(&self) -> u8;
+    fn get_required_level(&self) -> u32;
 
     /// They can change after.
-    fn durability(&self) -> u8;
+    fn get_durability(&self) -> u8;
     fn set_durability(&mut self, durability: u8);
 
     fn clone_box(&self) -> Box<dyn Weapon>;
+    fn as_any(&self) -> &dyn Any;
 }
 
-impl fmt::Debug for dyn Weapon {
+impl Debug for dyn Weapon {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Weapon")
             .field("name", &self.get_name())
@@ -29,7 +32,8 @@ impl fmt::Debug for dyn Weapon {
             .field("attack_speed", &self.get_attack_speed())
             .field("attack_damage", &self.get_attack_damage())
             .field("range", &self.get_range())
-            .field("durability", &self.durability())
+            .field("durability", &self.get_durability())
+            .field("required_level", &self.get_required_level())
             .finish()
     }
 }
