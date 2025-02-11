@@ -1,33 +1,35 @@
-use core::{
-    entity::{
-        player::{self, player::Class, warrior::Warrior},
-        weapon::weapon::Weapon,
-    },
-    services::factory::weapon_factory::RandomWeaponFactory,
+use crate::core::entity::player::class::{Alive, AliveClass, Class, DeadClass};
+use crate::core::entity::player::stat::Attribute;
+use core::entity::{
+	player::warrior::Warrior,
+	weapon::weapon::Weapon,
 };
-use std::io;
 
-pub mod core;
-fn main() -> io::Result<()> {
-    let mut player1 = Warrior::new("Bulut".to_string(), 5, (0.0, 1.0));
-    let mut player2 = Warrior::new("Beyza".to_string(), 1, (0.0, 1.1));
+mod core;
+mod error;
 
-    let mut swords = RandomWeaponFactory::create_weapons(10, None);
+#[tokio::main]
+async fn main() -> error::Result<()> {
+	let stat = Attribute {
+		strength: 10,
+		dexterity: 5,
+		intelligence: 3,
+	};
 
-    for sword in swords.iter() {
-        println!(
-            "Sword Name: {} | Rarity: {:?} | Damage: {} | Range: {}",
-            sword.get_name(),
-            sword.get_rarity(),
-            sword.get_attack_damage(),
-            sword.get_range()
-        );
-    }
+	let mut warrior = Warrior::<Alive>::new("Arthas".to_string(), stat, (0.0, 0.0));
+	println!("Warrior Created: {}", warrior.get_name());
 
-    let sword = swords.remove(0);
+	println!("Health: {}", warrior.get_health());
 
-    player1.set_weapon(sword).unwrap();
-    println!("PLAYER: {:#?}", player1);
-    player1.strike(Box::new(player2));
-    Ok(())
+	warrior.take_damage(30.0);
+	println!("After damage, Health: {}", warrior.get_health());
+
+	warrior.take_damage(80.0); // Should kill the warrior
+
+	let dead_warrior = warrior.die();
+
+	// Trying to resurrect
+	let resurrected_warrior = dead_warrior.resurrect();
+	println!("{} has been resurrected with health: {}", resurrected_warrior.get_name(), resurrected_warrior.get_health());
+	Ok(())
 }
