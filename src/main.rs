@@ -1,13 +1,9 @@
-use crate::core::entity::player::class::{Alive, AliveClass, Class, DeadClass};
-use crate::core::entity::player::stat::Attribute;
-use core::entity::{
-	player::warrior::Warrior,
-};
+use crate::core::entity::player::class::{AliveClass, Class, DeadClass};
 
 mod core;
 mod error;
 
 #[tokio::main]
 async fn main() -> error::Result<()> {
-Ok(())
+	Ok(())
 }
