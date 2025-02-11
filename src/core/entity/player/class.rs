@@ -49,10 +49,10 @@ pub trait AliveClass: Class + Send + Sync {
 	fn set_position(&mut self, position: (f32, f32));
 	fn move_by(&mut self, dx: f32, dy: f32);
 	fn die(self) -> Self::DeadType;
-	}
+}
 
 pub trait DeadClass: Sized {
-    type AliveType: AliveClass;
+	type AliveType: AliveClass;
 
-    fn resurrect(self) -> Self::AliveType;
+	fn resurrect(self) -> Self::AliveType;
 }
