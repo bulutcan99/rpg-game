@@ -8,8 +8,25 @@ use super::{damage::DamageOutput, error::Result};
 pub struct Alive;
 pub struct Dead;
 
-pub trait Class: Send+Sync {
+pub trait AliveStatus {
+    fn is_alive() -> bool;
+}
+
+impl AliveStatus for Alive {
+    fn is_alive() -> bool {
+        true
+    }
+}
+
+impl AliveStatus for Dead {
+    fn is_alive() -> bool {
+        false
+    }
+}
+
+pub trait Class: Send + Sync {
 	const MAIN_STAT: WhichAttribute;
+	type Status:AliveStatus;
 	fn get_name(&self) -> &str;
 	fn is_alive(&self) -> bool;
 	fn get_health(&self) -> f32;
@@ -37,7 +54,7 @@ pub trait Class: Send+Sync {
 	fn set_stat(&mut self, amount: u8, stat: WhichAttribute) -> Result<()>;
 }
 
-pub trait AliveClass: Class  {
+pub trait AliveClass: Class {
 	type DeadType: DeadClass;
 
 	fn take_damage(&mut self, damage: f32);
@@ -47,7 +64,7 @@ pub trait AliveClass: Class  {
 	fn die(self) -> Self::DeadType;
 }
 
-pub trait DeadClass: Class  {
+pub trait DeadClass: Class {
 	type AliveType: AliveClass;
 
 	fn resurrect(self) -> Self::AliveType;

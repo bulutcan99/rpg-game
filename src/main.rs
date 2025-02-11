@@ -2,7 +2,6 @@ use crate::core::entity::player::class::{Alive, AliveClass, Class, DeadClass};
 use crate::core::entity::player::stat::Attribute;
 use core::entity::{
 	player::warrior::Warrior,
-	weapon::weapon::Weapon,
 };
 
 mod core;
@@ -20,6 +19,7 @@ async fn main() -> error::Result<()> {
 	println!("Warrior Created: {}", warrior.get_name());
 
 	println!("Health: {}", warrior.get_health());
+	println!("Arthas is alive {:?}",warrior.is_alive());
 
 	warrior.take_damage(30.0);
 	println!("After damage, Health: {}", warrior.get_health());
@@ -28,7 +28,8 @@ async fn main() -> error::Result<()> {
 
 	let dead_warrior = warrior.die();
 	let dead_warrior_hp = dead_warrior.get_health();
-	println!("NOW HP {:?}", dead_warrior_hp);
+	println!("Arthas's Health: {:?}", dead_warrior_hp);
+	println!("Arthas is alive {:?}",dead_warrior.is_alive());
 	// Trying to resurrect
 	let resurrected_warrior = dead_warrior.resurrect();
 	println!("{} has been resurrected with health: {}", resurrected_warrior.get_name(), resurrected_warrior.get_health());

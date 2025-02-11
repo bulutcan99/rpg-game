@@ -1,7 +1,6 @@
-use crate::core::entity::player::class::{Alive, AliveClass, Class, Dead, DeadClass};
+use crate::core::entity::player::class::{Alive, AliveClass, AliveStatus, Class, Dead, DeadClass};
 use crate::core::entity::player::damage::DamageOutput;
-use crate::core::entity::player::error::Result;
-use crate::core::entity::player::stat::WhichAttribute::Str;
+use crate::core::entity::player::error::{Error, Result};
 use crate::core::entity::player::stat::{Attribute, WhichAttribute};
 use crate::core::entity::weapon::weapon::Weapon;
 use std::marker::PhantomData;
@@ -43,16 +42,17 @@ impl Warrior<Alive> {
 
 impl<S> Class for Warrior<S>
 where
-	S: Send + Sync,
+	S: AliveStatus + Send + Sync,
 {
-	const MAIN_STAT: WhichAttribute = Str;
+	const MAIN_STAT: WhichAttribute = WhichAttribute::Str;
+	type Status = S;
 
 	fn get_name(&self) -> &str {
 		&self.name
 	}
 
 	fn is_alive(&self) -> bool {
-		todo!()
+		S::is_alive()
 	}
 
 	fn get_health(&self) -> f32 {
@@ -60,11 +60,19 @@ where
 	}
 
 	fn increase_health(&mut self, increase: f32) -> Result<()> {
-		todo!()
+		self.health += increase;
+		if self.health > self.max_health {
+			self.health = self.max_health;
+		}
+		Ok(())
 	}
 
 	fn set_health(&mut self, new_health: f32) -> Result<()> {
-		todo!()
+		self.health = new_health;
+		if self.health > self.max_health {
+			self.health = self.max_health;
+		}
+		Ok(())
 	}
 
 	fn get_max_health(&self) -> f32 {
@@ -72,11 +80,13 @@ where
 	}
 
 	fn increase_max_health(&mut self, health: f32) -> Result<()> {
-		todo!()
+		self.max_health += health;
+		Ok(())
 	}
 
 	fn set_max_health(&mut self, new_max_health: f32) -> Result<()> {
-		todo!()
+		self.max_health = new_max_health;
+		Ok(())
 	}
 
 	fn get_stamina(&self) -> f32 {
@@ -84,11 +94,16 @@ where
 	}
 
 	fn increase_stamina(&mut self, increase: f32) -> Result<()> {
-		todo!()
+		self.stamina += increase;
+		if self.stamina > self.max_stamina {
+			self.stamina = self.max_stamina;
+		}
+		Ok(())
 	}
 
 	fn set_stamina(&mut self, new_stamina: f32) -> Result<()> {
-		todo!()
+		self.stamina = new_stamina;
+		Ok(())
 	}
 
 	fn get_level(&self) -> u32 {
@@ -96,11 +111,13 @@ where
 	}
 
 	fn increase_level(&mut self) -> Result<()> {
-		todo!()
+		self.level += 1;
+		Ok(())
 	}
 
 	fn set_level(&mut self, new_level: u32) -> Result<()> {
-		todo!()
+		self.level = new_level;
+		Ok(())
 	}
 
 	fn get_experience(&self) -> u32 {
@@ -108,19 +125,24 @@ where
 	}
 
 	fn add_experience(&mut self, xp: u32) {
-		todo!()
+		self.experience += xp;
 	}
 
 	fn get_position(&self) -> (f32, f32) {
 		self.position
 	}
 
-	fn get_weapon(&self) -> Option<Box<dyn Weapon>> {
+	fn get_weapon(&self) -> Option<Box<dyn Weapon>>{
 		self.weapon.clone()
 	}
 
 	fn set_weapon(&mut self, weapon: Box<dyn Weapon>) -> Result<()> {
-		todo!()
+		if self.weapon.is_some() {
+			return Err(Error::WeaponAlreadyEquipped);
+		}
+
+		self.weapon = Some(weapon);
+		Ok(())
 	}
 
 	fn get_gold(&self) -> u32 {
@@ -128,11 +150,13 @@ where
 	}
 
 	fn increase_gold(&mut self, gold: u32) -> Result<()> {
-		todo!()
+		self.gold += gold;
+		Ok(())
 	}
 
 	fn set_gold(&mut self, new_gold: u32) -> Result<()> {
-		todo!()
+		self.gold = new_gold;
+		Ok(())
 	}
 
 	fn get_stat(&self) -> Attribute {
@@ -140,11 +164,21 @@ where
 	}
 
 	fn increase_stat(&mut self, amount: u8, stat: WhichAttribute) -> Result<()> {
-		todo!()
+		match stat {
+			WhichAttribute::Str => self.stat.strength += amount,
+			WhichAttribute::Int => self.stat.intelligence += amount,
+			WhichAttribute::Dex => self.stat.dexterity += amount,
+		}
+		Ok(())
 	}
 
 	fn set_stat(&mut self, amount: u8, stat: WhichAttribute) -> Result<()> {
-		todo!()
+		match stat {
+			WhichAttribute::Str => self.stat.strength = amount,
+			WhichAttribute::Int => self.stat.intelligence = amount,
+			WhichAttribute::Dex => self.stat.dexterity = amount,
+		}
+		Ok(())
 	}
 }
 
@@ -152,7 +186,7 @@ impl AliveClass for Warrior<Alive> {
 	type DeadType = Warrior<Dead>;
 	fn take_damage(&mut self, damage: f32) {
 		if self.health < damage {
-			println!("{} is dead!", self.name);
+			println!("{} has been killed!", self.name);
 			self.health = 0.0;
 		} else {
 			self.health -= damage;
@@ -183,11 +217,12 @@ impl AliveClass for Warrior<Alive> {
 	}
 
 	fn set_position(&mut self, position: (f32, f32)) {
-		todo!()
+		self.position = position;
 	}
 
 	fn move_by(&mut self, dx: f32, dy: f32) {
-		todo!()
+		self.position.0 += dx;
+		self.position.1 += dy;
 	}
 
 	fn die(self) -> Self::DeadType {
