@@ -72,12 +72,17 @@ lazy_static! {
 pub struct RandomWeaponFactory;
 
 impl RandomWeaponFactory {
-	pub async fn create_weapons(&self, count: usize, weapon_selector: (Option<&str>, u8)) -> Vec<Box<dyn Weapon>> {
+	pub async fn create_weapons(&self, count: usize, weapon_selector: Option<(&str, u8)>) -> Vec<Box<dyn Weapon>> {
 		let mut weapons: Vec<Box<dyn Weapon>> = Vec::new();
 		let mut rng = rand::thread_rng();
 
-		let (selected_weapon, mut specific_count) = weapon_selector;
+		// Handle the weapon_selector case where it's None or Some
+		let (selected_weapon, mut specific_count) = match weapon_selector {
+			Some((weapon, count)) => (Some(weapon), count),
+			None => (None, 0),  // Default values if weapon_selector is None
+		};
 
+		// If a specific weapon is selected, create that number of weapons
 		if let Some(weapon_type) = selected_weapon {
 			let reader = WEAPON_FACTORIES.read().await;
 			if let Some(factory) = reader.get(weapon_type) {
@@ -87,13 +92,14 @@ impl RandomWeaponFactory {
 			}
 		}
 
+		// Calculate remaining weapons to be created
 		let remaining_count = count.saturating_sub(specific_count as usize);
 		let reader = WEAPON_FACTORIES.read().await;
 		let weapon_types: Vec<&str> = reader.keys().copied().collect();
 
+		// Create random weapons for the remaining count
 		for _ in 0..remaining_count {
 			let random_choice = rng.gen_range(0..weapon_types.len());
-			let reader = WEAPON_FACTORIES.read().await;
 			if let Some(factory) = reader.get(weapon_types[random_choice]) {
 				weapons.push(factory.create_weapon());
 			}
@@ -113,7 +119,7 @@ mod test {
 	#[tokio::test]
 	async fn test_weapon_count() {
 		let factory = RandomWeaponFactory::default();
-		let weapons = factory.create_weapons(5, (None, 0)).await;
+		let weapons = factory.create_weapons(5, None).await;
 		assert_eq!(weapons.len(), 5, "5 silah üretilmesi bekleniyordu.");
 	}
 
@@ -121,7 +127,7 @@ mod test {
 	#[tokio::test]
 	async fn test_random_weapon_generation() {
 		let factory = RandomWeaponFactory::default();
-		let weapons = factory.create_weapons(10, (None, 0)).await;
+		let weapons = factory.create_weapons(10, None).await;
 
 		assert!(!weapons.is_empty(), "Silah listesi boş olmamalı.");
 		for weapon in weapons.iter() {
@@ -134,9 +140,9 @@ mod test {
 	async fn test_specific_weapon_generation() {
 		let factory = RandomWeaponFactory::default();
 
-		let swords = factory.create_weapons(3, (Some("Sword"), 3)).await;
-		let bows = factory.create_weapons(3, (Some("Bow"), 3)).await;
-		let spears = factory.create_weapons(3, (Some("Spear"), 3)).await;
+		let swords = factory.create_weapons(3, Some(("Sword", 3))).await;
+		let bows = factory.create_weapons(3, Some(("Bow", 3))).await;
+		let spears = factory.create_weapons(3, Some(("Spear", 3))).await;
 
 		for weapon in swords.iter() {
 			assert!(weapon.as_any().downcast_ref::<Sword>().is_some(), "Sword bekleniyordu.");
@@ -153,7 +159,7 @@ mod test {
 	#[tokio::test]
 	async fn test_weapon_stats_in_range() {
 		let factory = RandomWeaponFactory::default();
-		let weapons = factory.create_weapons(5, (None, 0)).await;
+		let weapons = factory.create_weapons(5, None).await;
 
 		for weapon in weapons.iter() {
 			let damage = weapon.get_attack_damage();
@@ -166,7 +172,7 @@ mod test {
 
 	async fn get_min_6_sword_from_stack() -> Vec<Box<dyn Weapon>> {
 		let factory = RandomWeaponFactory::default();
-		let weapons = factory.create_weapons(20, (Some("Sword"), 6)).await;
+		let weapons = factory.create_weapons(20, Some(("Sword", 6))).await;
 
 		weapons.into_iter().filter(|weapon| {
 			weapon.as_any().downcast_ref::<Sword>().is_some()
