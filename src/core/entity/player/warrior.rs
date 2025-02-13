@@ -269,7 +269,7 @@ mod test {
 	use crate::core::entity::player::class::DeadClass;
 
 	#[tokio::test]
-	async fn dead_or_alive() {
+	async fn test_dead_or_alive() {
 		use crate::core::entity::player::class::{AliveClass, Class};
 		use crate::core::entity::player::stat::Attribute;
 		use crate::core::entity::player::warrior::Warrior;
