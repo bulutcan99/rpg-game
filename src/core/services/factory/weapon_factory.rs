@@ -59,15 +59,15 @@ impl WeaponFactory for SpearWeaponFactory {
 }
 
 lazy_static! {
-    static ref WEAPON_FACTORIES: RwLock<HashMap<&'static str, Box<dyn WeaponFactory>>> = {
- let mut factories = HashMap::<&'static str, Box<dyn WeaponFactory>>::new();        factories.insert("Sword", Box::new(MeleeWeaponFactory));
+    static ref WEAPON_FACTORIES: RwLock<HashMap<&'static str, Box<dyn WeaponFactory + Send + Sync>>> = {
+ let mut factories = HashMap::<&'static str, Box<dyn WeaponFactory+ Send + Sync>>::new();        factories.insert("Sword", Box::new(MeleeWeaponFactory));
         factories.insert("Bow", Box::new(RangedWeaponFactory));
         factories.insert("Spear", Box::new(SpearWeaponFactory));
         RwLock::new(factories)
     };
 
-    static ref WEAPON_ARMORY: RwLock<HashMap<&'static str, Box<dyn Weapon>>> = {
-        let armory = HashMap::<&'static str, Box<dyn Weapon>>::new();
+    static ref WEAPON_ARMORY: RwLock<HashMap<&'static str, Box<dyn Weapon+ Send + Sync>>> = {
+        let armory = HashMap::<&'static str, Box<dyn Weapon+ Send + Sync>>::new();
         RwLock::new(armory)
     };
 }
