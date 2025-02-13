@@ -134,9 +134,9 @@ mod test {
 	async fn test_specific_weapon_generation() {
 		let factory = RandomWeaponFactory::default();
 
-		let swords = factory.create_weapons(3, (Some("Sword"), 2)).await;
-		let bows = factory.create_weapons(3, (Some("Bow"), 2)).await;
-		let spears = factory.create_weapons(3, (Some("Spear"), 2)).await;
+		let swords = factory.create_weapons(3, (Some("Sword"), 3)).await;
+		let bows = factory.create_weapons(3, (Some("Bow"), 3)).await;
+		let spears = factory.create_weapons(3, (Some("Spear"), 3)).await;
 
 		for weapon in swords.iter() {
 			assert!(weapon.as_any().downcast_ref::<Sword>().is_some(), "Sword bekleniyordu.");
