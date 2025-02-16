@@ -1,12 +1,11 @@
-use crate::core::entity::player::class::{AliveClass, Class, DeadClass};
+mod error;
+
 use bevy::app::{App, PluginGroup};
 use bevy::math::Vec2;
 use bevy::prelude::{ImagePlugin, MonitorSelection};
 use bevy::window::{Window, WindowLevel, WindowPlugin, WindowPosition};
 use bevy::DefaultPlugins;
 
-mod core;
-mod error;
 
 #[tokio::main]
 async fn main() -> error::Result<()> {
