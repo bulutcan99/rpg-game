@@ -11,11 +11,11 @@ use std::collections::HashMap;
 use tokio::sync::RwLock;
 
 fn random_stat_within_range(min: f32, max: f32) -> f32 {
-    rand::thread_rng().gen_range(min..max)
+    rand::rng().random_range(min..max)
 }
 
 fn random_stat_int_within_range(min: u8, max: u8) -> u8 {
-    rand::thread_rng().gen_range(min..=max)
+    rand::rng().random_range(min..=max)
 }
 
 fn random_rarity() -> Rarity {
