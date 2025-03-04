@@ -1,13 +1,12 @@
-use bevy::math::Vec2;
+use bevy::math::{Vec2};
 use bevy::prelude::Component;
 
 #[derive(Component)]
-pub struct Position {
-    location: Vec2,
-}
+pub struct Position(Vec2);
+
 
 #[derive(Component)]
-pub struct Speed(pub f32);
+pub struct Velocity(Vec2);
 
 #[derive(Component)]
 pub struct Vision(pub u8);

@@ -1,8 +1,0 @@
-[package]
-name = "client"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-tokio = {version = "1.43.0", features = ["full"]}
-bevy = {version = "0.15.2", features = ["default"]}

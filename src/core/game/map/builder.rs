@@ -1,0 +1,3 @@
+trait Builder: Sync+Send{
+
+}
