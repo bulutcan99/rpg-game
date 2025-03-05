@@ -1,6 +1,5 @@
 use bevy::asset::Handle;
-use bevy::image::Image;
-use bevy::prelude::Component;
+use bevy::prelude::{Component, Image, Timer};
 
 #[derive(Component)]
 pub struct Renderable {
@@ -19,4 +18,12 @@ impl Default for Renderable {
             texture: Handle::default(),
         }
     }
+}
+
+#[derive(Component)]
+struct Animation {
+    start_frame: usize,
+    end_frame: usize,
+    current_frame: usize,
+    timer: Timer,
 }

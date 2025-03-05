@@ -9,7 +9,7 @@ keywords = ["gamedev", "bevy", "roguelike"]
 tokio = { version = "1.43.0" , features = ["full"] }
 lazy_static = "1.5.0"
 rand = "0.9.0"
-bevy = { version = "0.15.2", features = ["dynamic_linking"] }
+bevy = { version = "0.15.3", features = ["dynamic_linking"] }
 
 
 [workspace]
