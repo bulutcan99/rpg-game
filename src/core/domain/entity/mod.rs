@@ -1,3 +1,3 @@
-pub mod class;
-pub mod monster;
+pub mod ai;
+pub mod player;
 pub mod weapon;

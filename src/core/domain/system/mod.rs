@@ -1,4 +1,3 @@
-pub mod command;
+pub mod ai;
 pub mod common;
-pub mod render;
-pub mod warrior;
+pub mod user;

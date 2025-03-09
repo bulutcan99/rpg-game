@@ -1,15 +1,19 @@
-use crate::core::domain::entity::class::{ClassBundle, ClassType};
-use crate::core::domain::system::command::spawn_user;
-use crate::core::domain::system::render::animate_sprite;
+use crate::core::domain::entity::player::Player;
+use crate::core::domain::system::user::command::spawn_user;
+use crate::core::domain::system::user::render::{execute_animations, trigger_animation};
+use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 
 mod core;
 mod error;
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_systems(Startup, spawn_user)
-        .add_systems(Update, animate_sprite)
+        .add_systems(Update, execute_animations)
+        .add_systems(Update, trigger_animation)
         .run();
+    Ok(())
 }
